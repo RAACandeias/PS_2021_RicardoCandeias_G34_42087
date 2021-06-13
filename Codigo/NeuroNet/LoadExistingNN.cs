@@ -10,8 +10,8 @@ namespace NeuroNetwork
     {
         public static void LoadExistingNNAndTest(int eachDigitQuantity)
         {          
-            string savePath = @"..\..\data\neuro net";
-            string mnistDatasetPath = @"..\..\data\dataset";                                                         
+            string savePath = @".\data\neuro net";
+            string mnistDatasetPath = @".\data\dataset";                                                         
             NeuralNetwork nn = NeuralNetwork.LoadNeuroNet(784, 200, 10, 0.1, savePath);
             MNISTHandler mh = new MNISTHandler(mnistDatasetPath, null, eachDigitQuantity);
             mh.LoadTestData();

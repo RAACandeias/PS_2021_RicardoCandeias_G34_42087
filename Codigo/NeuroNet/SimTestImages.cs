@@ -10,8 +10,8 @@ namespace NeuroNetwork
     {
         public static void SimulateLoop(int eachDigitQuantity)
         {            
-            string formatedTestImgs = @"..\..\data\formated test images";
-            string savePath = @"..\..\data\neuro net";
+            string formatedTestImgs = @".\data\formated test images";
+            string savePath = @".\data\neuro net";
             NeuralNetwork nn = NeuralNetwork.LoadNeuroNet(784, 200, 10, 0.1, savePath);
             MNISTHandler mh = new MNISTHandler(null, formatedTestImgs, eachDigitQuantity);
             mh.LoadHandMadeData(eachDigitQuantity);

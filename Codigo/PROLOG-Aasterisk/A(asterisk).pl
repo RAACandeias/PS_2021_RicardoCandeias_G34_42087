@@ -1,3 +1,52 @@
+%s( Node, Node1, Cost) - This is true if there is an arc, costing Cost, between Node and Node1, 
+% in the state space.
+
+s( s, a, 2).
+
+s( s, e, 2).
+
+% left subtree
+s( a, b, 2).
+
+s( b, c, 2).
+
+s( c, d, 3).
+
+s( d, t, 3).
+
+% right subtree
+s( e, f, 5).
+
+s( f, g, 2).
+
+s( g, t, 2).
+
+% goal(Node) - is true if Node is a goal node in the state space.
+%
+goal(t).
+
+% h( Node, H) - H is a heuristic estimate of the cost of a 
+% cheapest path from Node to a goal node.
+
+% left subtree
+h(a, 5).
+
+h(b, 4).
+
+h(c, 4).
+
+h(d, 3).
+
+% right subtree
+h(e, 7).
+
+h(f, 4).
+
+h(g, 2).
+
+% ADDED
+h(t, 0).
+
 %
 %	data structure example start:
 %	t( startNode, Cost1/0, [l(SuccOfStart1, Cost1/distSum1), l(SuccOfStart2, Cost2/distSum2)] )
@@ -42,32 +91,31 @@ bestfirst(Start, Solution) :-
 expand(P, l(N, _),_, _, yes, [N|P]) :- goal(N).
 
 %case 2: leaf-node, f-value less than Bound, expand within bound
-expand(P, l(N, F/G), Bound, Tree1, Solved, Solution) :-
-	F => Bound,
-	(
-		bagof(
-			M/C, (s(N, M, C), \+member(M,P)), Succ
-		),
-		!,
-		succlist(G, Succ, Ts),
-		bestf(Ts, F1),
-		expand(P,t(N, F1/G, Ts), Bound, Tree1, Solved, Sol)
+expand(P, l(N, F/G), Bound, Tree1, Solved, Sol) :-
+	F =< Bound,
+	( 
+		bagof( M/C, ( s(N, M, C), \+ member(M, P)), Succ),
+		!,                      % Node N has successors
+		succlist( G, Succ, Ts), % Make subtrees Ts
+		bestf( Ts, F1),         % f-value of best successor
+		expand(P, t(N, F1/G, Ts), Bound, Tree1, Solved, Sol)
 		;
-		Solved = never
+		Solved = never           % N has no successors - dead end
 	).
 
 %case 3: non-leaf, f-value < Bound, expand most promising sub-tree
-expand(P, t(N, F/G, [T|Ts]), Bound, Tree1, Solved, Solution) :- 
-	F => Bound,
-	besft(Ts, BF), min(Bound, BF, Bound1),
-	expand([N|P], T, Bound1, T1, Solved1, Solution),
-	continue(P, t(N, F/G, [T1|Ts]), Bound, Tree1, Solved1, Solved, Solution).
+expand( P, t(N, F/G, [T | Ts]), Bound, Tree1, Solved, Sol) :-
+	F =< Bound,
+	bestf(Ts, BF), Bound1 = min( Bound, BF), % min( Bound, BF, Bound1) does not work in SWI-Prolog
+	expand([N | P], T, Bound1, T1, Solved1, Sol),
+	continue(P, t(N, F/G, [T1 | Ts]), Bound, Tree1, Solved1, Solved, Sol).
 	
 %case 4: non-leaf with empty subtrees
-expand(_, t(_, _, [])_, _, never, _) :- !.
+expand( _, t(_, _, []), _, _, never, _) :- !.
 
 %case 5: value > Bound
-expand(_, Tree, Bound, Tree, no, _) :- f(Tree, F), F > Bound)
+expand(_, Tree, Bound, Tree, no, _) :- 
+	f(Tree, F), F > Bound.
 
 %------- continue(path, Tree, Bound, NewTree, SubtreeSolved, TreeSolved, Solution) --------|
 
@@ -75,10 +123,8 @@ continue(_, _, _, _, yes, yes, Solution).
 
 continue(P, t(N, F/G, [T1|Ts]), Bound, Tree1, no, Solved, Solution) :-
 	insert(T1, Ts, NTs),
-	bestF(NTs, F1),
+	bestf(NTs, F1),
 	expand(P, t(N, F1/G, NTs), Bound,Tree1,Solved,Solution).
-
-% não percebi bem esta continuação
 
 continue( P, t(N, F/G, [_ | Ts]), Bound, Tree1, never, Solved, Sol) :-
 	bestf( Ts, F1),
@@ -95,7 +141,7 @@ succlist(G0, [N/C | NCs], Ts) :-
 	h(N, H),     %heuristica para o succ
 	F is G + H,
 	succlist(G0, NCs, Ts1),
-	insert( l(N, F/G), Ts1, Ts)).
+	insert( l(N, F/G), Ts1, Ts).
 	
 % Insert T into list of Trees Ts preserving order with respect to f-values
 % Menor para Maior
@@ -114,10 +160,10 @@ f(l(_, F/_), F).    %F-value of leaf
 
 f(t(_, F/_, _), F). %f-value of tree
 
-bestF([T | _], F) :- %best value of list of trees 
+bestf([T | _], F) :- %best value of list of trees 
 	f(T, F).         %garanteed by insert
 	
-bestF([], 9999). %no tree bad F value
+bestf([], 9999). %no tree bad F value
 
 
 

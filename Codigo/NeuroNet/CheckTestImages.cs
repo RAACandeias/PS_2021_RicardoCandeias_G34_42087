@@ -7,9 +7,9 @@ namespace NeuroNetwork
     {       
         public static void RefreshTestImages(int eachDigitQuantity)
         {            
-            string handMadeImgPath = @"..\..\data\test images";
-            string formatedTestImgs = @"..\..\data\formated test images";
-            string savePath = @"..\..\data\neuro net";           
+            string handMadeImgPath = @".\data\test images";
+            string formatedTestImgs = @".\data\formated test images";
+            string savePath = @".\data\neuro net";           
 
             Matrix<double>[] mA = new Matrix<double>[eachDigitQuantity*10];
             for(int digit = 0; digit < 10; digit++)

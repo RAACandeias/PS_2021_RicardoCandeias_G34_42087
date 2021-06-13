@@ -30,3 +30,14 @@ D:\Documents\Faculdade\LEIC\semestre_4\PS\SysPlan\NeuroNet\obj\Debug\NeuroNetwor
 D:\Documents\Faculdade\LEIC\semestre_4\PS\SysPlan\NeuroNet\obj\Debug\NeuroNetwork.csproj.CopyComplete
 D:\Documents\Faculdade\LEIC\semestre_4\PS\SysPlan\NeuroNet\obj\Debug\NeuroNetwork.exe
 D:\Documents\Faculdade\LEIC\semestre_4\PS\SysPlan\NeuroNet\obj\Debug\NeuroNetwork.pdb
+D:\Documents\Faculdade\LEIC\semestre_4\PS\SysPlan\PS_2021_RicardoCandeias_G34_42087\Codigo\NeuroNet\bin\Debug\NeuroNetwork.exe.config
+D:\Documents\Faculdade\LEIC\semestre_4\PS\SysPlan\PS_2021_RicardoCandeias_G34_42087\Codigo\NeuroNet\bin\Debug\NeuroNetwork.exe
+D:\Documents\Faculdade\LEIC\semestre_4\PS\SysPlan\PS_2021_RicardoCandeias_G34_42087\Codigo\NeuroNet\bin\Debug\NeuroNetwork.pdb
+D:\Documents\Faculdade\LEIC\semestre_4\PS\SysPlan\PS_2021_RicardoCandeias_G34_42087\Codigo\NeuroNet\bin\Debug\MathNet.Numerics.dll
+D:\Documents\Faculdade\LEIC\semestre_4\PS\SysPlan\PS_2021_RicardoCandeias_G34_42087\Codigo\NeuroNet\bin\Debug\System.Drawing.Common.dll
+D:\Documents\Faculdade\LEIC\semestre_4\PS\SysPlan\PS_2021_RicardoCandeias_G34_42087\Codigo\NeuroNet\bin\Debug\MathNet.Numerics.xml
+D:\Documents\Faculdade\LEIC\semestre_4\PS\SysPlan\PS_2021_RicardoCandeias_G34_42087\Codigo\NeuroNet\obj\Debug\NeuroNetwork.csprojAssemblyReference.cache
+D:\Documents\Faculdade\LEIC\semestre_4\PS\SysPlan\PS_2021_RicardoCandeias_G34_42087\Codigo\NeuroNet\obj\Debug\NeuroNetwork.csproj.CoreCompileInputs.cache
+D:\Documents\Faculdade\LEIC\semestre_4\PS\SysPlan\PS_2021_RicardoCandeias_G34_42087\Codigo\NeuroNet\obj\Debug\NeuroNetwork.csproj.CopyComplete
+D:\Documents\Faculdade\LEIC\semestre_4\PS\SysPlan\PS_2021_RicardoCandeias_G34_42087\Codigo\NeuroNet\obj\Debug\NeuroNetwork.exe
+D:\Documents\Faculdade\LEIC\semestre_4\PS\SysPlan\PS_2021_RicardoCandeias_G34_42087\Codigo\NeuroNet\obj\Debug\NeuroNetwork.pdb

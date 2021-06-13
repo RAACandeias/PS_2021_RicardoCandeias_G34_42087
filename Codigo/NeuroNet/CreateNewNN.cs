@@ -7,8 +7,8 @@ namespace NeuroNetwork
     {
         public static void CreateNewNNAndTrain(int eachDigitQuantity)
         {          
-            string savePath = @"..\..\data\neuro net";
-            string mnistDatasetPath = @"..\..\data\dataset";
+            string savePath = @".\data\neuro net";
+            string mnistDatasetPath = @".\data\dataset";
             MNISTHandler mh = new MNISTHandler(mnistDatasetPath, null, eachDigitQuantity);
             mh.LoadTrainData();
             NeuralNetwork nn = new NeuralNetwork(784, 200, 10, 0.1);

@@ -19,7 +19,7 @@ namespace NeuroNetwork
 
         public Matrix<double> ActivationFunction(Matrix<double> matrix)
         {
-            return matrix.Map(SpecialFunctions.Logistic);//this is sigmoid function
+            return matrix.Map(SpecialFunctions.Logistic); //this is sigmoid function
         }
 
         public NeuralNetwork(int inputNodesNum, int hiddenNodesNum, int outputNodesNum, double learningRate)
