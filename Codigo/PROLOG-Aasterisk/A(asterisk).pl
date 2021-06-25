@@ -1,53 +1,3 @@
-%s( Node, Node1, Cost) - This is true if there is an arc, costing Cost, between Node and Node1, 
-% in the state space.
-
-s( s, a, 2).
-
-s( s, e, 2).
-
-% left subtree
-s( a, b, 2).
-
-s( b, c, 2).
-
-s( c, d, 3).
-
-s( d, t, 3).
-
-% right subtree
-s( e, f, 5).
-
-s( f, g, 2).
-
-s( g, t, 2).
-
-% goal(Node) - is true if Node is a goal node in the state space.
-%
-goal(t).
-
-% h( Node, H) - H is a heuristic estimate of the cost of a 
-% cheapest path from Node to a goal node.
-
-% left subtree
-h(a, 5).
-
-h(b, 4).
-
-h(c, 4).
-
-h(d, 3).
-
-% right subtree
-h(e, 7).
-
-h(f, 4).
-
-h(g, 2).
-
-% ADDED
-h(t, 0).
-
-%
 %	data structure example start:
 %	t( startNode, Cost1/0, [l(SuccOfStart1, Cost1/distSum1), l(SuccOfStart2, Cost2/distSum2)] )
 %	if Cost1 < Cost2 && Cost2 = distSum + distEuclid(heuristic from SuccOfStart2 to end node)
@@ -94,7 +44,7 @@ expand(P, l(N, _),_, _, yes, [N|P]) :- goal(N).
 expand(P, l(N, F/G), Bound, Tree1, Solved, Sol) :-
 	F =< Bound,
 	( 
-		bagof( M/C, ( s(N, M, C), \+ member(M, P)), Succ),
+		bagof( M/C, ( s(N, M, C), \+ member(M, P), \+ obstacle(M)), Succ),
 		!,                      % Node N has successors
 		succlist( G, Succ, Ts), % Make subtrees Ts
 		bestf( Ts, F1),         % f-value of best successor
@@ -119,14 +69,16 @@ expand(_, Tree, Bound, Tree, no, _) :-
 
 %------- continue(path, Tree, Bound, NewTree, SubtreeSolved, TreeSolved, Solution) --------|
 
-continue(_, _, _, _, yes, yes, Solution).
+%continue(_, _, _, _, yes, yes, Solution).
+continue(_, _, _, _, yes, yes, _).
 
-continue(P, t(N, F/G, [T1|Ts]), Bound, Tree1, no, Solved, Solution) :-
+%switch the 'F' on the 't(..)' to '_'
+continue(P, t(N, _/G, [T1|Ts]), Bound, Tree1, no, Solved, Solution) :-
 	insert(T1, Ts, NTs),
 	bestf(NTs, F1),
 	expand(P, t(N, F1/G, NTs), Bound,Tree1,Solved,Solution).
 
-continue( P, t(N, F/G, [_ | Ts]), Bound, Tree1, never, Solved, Sol) :-
+continue( P, t(N, _/G, [_ | Ts]), Bound, Tree1, never, Solved, Sol) :-
 	bestf( Ts, F1),
 	expand( P, t(N, F1/G, Ts), Bound, Tree1, Solved, Sol).
 
