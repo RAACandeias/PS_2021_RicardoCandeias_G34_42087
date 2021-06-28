@@ -12,9 +12,9 @@ program :-
 	write(' 7.Present Obstacles '),nl,
 	write(' 8.Find Path '),nl,
 	write(' 9.Clear window '),nl,
-	write(' 10.End Program '),nl,nl,
+	write(' 0.End Program '),nl,nl,
     write('enter your choice:'),nl,
-    read(Option), Option > 0, Option =< 9,
+    read(Option), Option >= 0, Option =< 9,
     exe(Option).
 	
 program_next :- 
