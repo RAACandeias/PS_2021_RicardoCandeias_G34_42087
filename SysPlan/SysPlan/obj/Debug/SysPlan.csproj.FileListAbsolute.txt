@@ -15,3 +15,4 @@ D:\Documents\Faculdade\LEIC\semestre_4\PS\SysPlan\PS_2021_RicardoCandeias_G34_42
 D:\Documents\Faculdade\LEIC\semestre_4\PS\SysPlan\PS_2021_RicardoCandeias_G34_42087\SysPlan\SysPlan\obj\Debug\SysPlan.pdb
 D:\Documents\Faculdade\LEIC\semestre_4\PS\SysPlan\PS_2021_RicardoCandeias_G34_42087\SysPlan\SysPlan\bin\Debug\MathNet.Numerics.dll
 D:\Documents\Faculdade\LEIC\semestre_4\PS\SysPlan\PS_2021_RicardoCandeias_G34_42087\SysPlan\SysPlan\bin\Debug\MathNet.Numerics.xml
+D:\Documents\Faculdade\LEIC\semestre_4\PS\SysPlan\PS_2021_RicardoCandeias_G34_42087\SysPlan\SysPlan\obj\Debug\SysPlan.csproj.AssemblyReference.cache

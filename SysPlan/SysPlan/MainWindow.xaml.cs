@@ -274,7 +274,8 @@ namespace SysPlan
         }
 
         private void RefreshPath()
-        {            
+        {
+            ResetMapCanvas(xyMax[0], xyMax[1]);
             if (destinyLocation != null)
             {
                 try
@@ -301,23 +302,30 @@ namespace SysPlan
             return (object sender, RoutedEventArgs e) => {                
                 Step partOfPath = steps.Find((st) => {
                     return st.c2.x == c.x && st.c2.y == c.y;
-                });
-                Coords partOfObstacles = obstacles.Find((crd) => {
-                    return crd.x == c.x && crd.y == c.y;
-                });
-                //string o = partOfObstacles != null ? "Is Obstacle" : "Is Not Obstacle";
-                //string p = partOfPath != null ? "Is Path" : "Is Not Path";
-                //MessageBox.Show($"{c} {o}, {p}");                
-                if (partOfObstacles != null)
-                {
+                });                                           
+                if (isObstacle(c.x, c.y))
+                {                    
+                    if (!obstacles.Remove(obstacles.Find((o) => { return o.Equals(c); })))
+                    {
+                        MessageBox.Show("Failed to Remove Obstacle");
+                        return;
+                    }
                     RemoveObstacle(c);
-                    if(!obstacles.Remove(partOfObstacles)) MessageBox.Show("Failed to Remove Obstacle");
                     PlaceImg(floorImgPath, c.x+1, c.y+1);                                        
-                    mapCanvas.Children.Clear();
                     RefreshPath();
                 }
-                else
+                else if(!isWall(c.x, c.y))
                 {
+                    if (robotLocation != null && robotLocation.Equals(c))
+                    {
+                        MessageBox.Show("Cannot place obstacle on top of Robot!");
+                        return;
+                    }
+                    if (destinyLocation != null && destinyLocation.Equals(c))
+                    {
+                        MessageBox.Show("Cannot place obstacle on top of destiny!");
+                        return;
+                    }
                     AddObstacle(c);
                     obstacles.Add(c);
                     PlaceImg(obstacleImgPath, c.x + 1, c.y + 1);
@@ -409,7 +417,8 @@ namespace SysPlan
             Button bttn = new Button()
             {
                 Content = "Confirm",
-                Margin = new Thickness(5)
+                Margin = new Thickness(5),
+                Height = 30
             };
             bttn.Click += clickMethod;
             Grid.SetColumn(bttn, col);
@@ -464,12 +473,14 @@ namespace SysPlan
             if (Digit == 0)
             {
                 string s1 = chosenDigits[1] == -1 ? "-" : chosenDigits[1] + "";
-                shownChosenDigits.Text = $"Chosen Digits:  {chosenDigits[0]} / {s1}";
+                string s0 = chosenDigits[0] == -1 ? "-" : chosenDigits[0] + "";
+                shownChosenDigits.Text = $"Chosen Digits:  {s0} / {s1}";
             }
             else
             {
-                string s1 = chosenDigits[0] == -1 ? "-" : chosenDigits[0] + "";
-                shownChosenDigits.Text = $"Chosen Digits:  {s1} / {chosenDigits[1]}";
+                string s0 = chosenDigits[0] == -1 ? "-" : chosenDigits[0] + "";
+                string s1 = chosenDigits[1] == -1 ? "-" : chosenDigits[1] + "";
+                shownChosenDigits.Text = $"Chosen Digits:  {s0} / {s1}";
             }
         }
         private void button1_Click(object sender, RoutedEventArgs e)
@@ -596,26 +607,53 @@ namespace SysPlan
         private void clear1_Click(object sender, RoutedEventArgs e)
         {
             digit1_IC.Strokes.Clear();
+            chosenDigits[0] = -1;
+            UpdateDigitShown(0);
         }
         private void undo1_Click(object sender, RoutedEventArgs e)
         {
-            digit1_IC.Strokes.RemoveAt(digit1_IC.Strokes.Count - 1);
+            if (digit1_IC.Strokes.Count > 0) {
+                digit1_IC.Strokes.RemoveAt(digit1_IC.Strokes.Count - 1);
+                if (digit1_IC.Strokes.Count == 0)
+                {
+                    chosenDigits[0] = -1;
+                    UpdateDigitShown(0);
+                }
+            }            
+
         }
         private void clear2_Click(object sender, RoutedEventArgs e)
         {
             digit2_IC.Strokes.Clear();
+            chosenDigits[1] = -1;
+            UpdateDigitShown(1);
         }
         private void undo2_Click(object sender, RoutedEventArgs e)
-        {
-            digit2_IC.Strokes.RemoveAt(digit2_IC.Strokes.Count - 1);
+        {            
+            if (digit2_IC.Strokes.Count > 0)
+            {
+                digit2_IC.Strokes.RemoveAt(digit2_IC.Strokes.Count - 1);
+                if (digit2_IC.Strokes.Count == 0)
+                {
+                    chosenDigits[1] = -1;
+                    UpdateDigitShown(1);
+                }
+            }
         }
         private void FindPath_Click(object sender, RoutedEventArgs e)
         {
-            if (isRobotPlaced && ChosenDigitsAreValid())
+            if (isRobotPlaced)
             {
-                destinyLocation = new Coords(chosenDigits[0], chosenDigits[1]);
-                SetGoal(destinyLocation);
-                RefreshPath();                
+                if (isValid(chosenDigits[0], chosenDigits[1]))
+                {
+                    destinyLocation = new Coords(chosenDigits[0], chosenDigits[1]);
+                    SetGoal(destinyLocation);
+                    RefreshPath();
+                }
+                else
+                {
+                    MessageBox.Show("Destiny location is invalid!");
+                }
             } else
             {
                 MessageBox.Show("Robot must be placed in valid coordinates to find Path!");
@@ -659,13 +697,22 @@ namespace SysPlan
             };            
             mapCanvas.Children.Add(line);
             return new Step(cord1, cord2, line);
+        }        
+
+        private bool isObstacle(int x, int y)
+        {
+            return obstacles.Find((c) => { return c.Equals(new Coords(x, y)); }) != null;
         }
 
         private void PlaceRobot_Click(object sender, RoutedEventArgs e)
         {
-            if (ChosenDigitsAreValid())
+            if (isValid(chosenDigits[0], chosenDigits[1]))                    
             {
-                if(isRobotPlaced) ResetMapGrid(xyMax[0] + 1, xyMax[1] + 1);
+                if (isRobotPlaced)
+                {
+                    ResetMapCanvas(xyMax[0] + 1, xyMax[1] + 1);
+                    PlaceImg(floorImgPath, robotLocation.x + 1, robotLocation.y + 1);
+                }
                 PlaceImg(robotImgPath, chosenDigits[0] + 1, chosenDigits[1] + 1);
                 if(!isRobotPlaced) isRobotPlaced = true;
                 robotLocation = new Coords(chosenDigits[0], chosenDigits[1]);
@@ -674,40 +721,26 @@ namespace SysPlan
                 MessageBox.Show("Coordenates chosen are not Valid!");
         }
 
-        private void ResetMapGrid(int col, int row)
+        private bool isValid(int v1, int v2)
         {
-            if (steps != null) mapCanvas.Children.Clear();
-            walls = GetWallInfo();
-            for (int i = 0; i <= row; i++)
-            {
-                for (int j = 0; j <= col; j++)
-                {
-                    if (i == 0 && j > 0)
-                        PlaceNumber(j, i, j - 1);
-                    else if (j == 0 && i > 0)
-                        PlaceNumber(j, i, i - 1);
-                    else if (i != 0 && j != 0)
-                        PlaceImg(floorImgPath, j, i);
-                }
-            }
-            foreach (Coords wall in walls)
-            {
-                PlaceImg(wallImgPath, wall.x + 1, wall.y + 1);
-            }            
+            return v1 != -1 && v2 != -1 && !isWall(v1, v2) && !isObstacle(v1, v2);
         }
 
-        private bool ChosenDigitsAreValid()
+        private void ResetMapCanvas(int col, int row)
         {
-            if (chosenDigits[0] != -1 && chosenDigits[1] != -1)
+            if (steps != null) 
+                mapCanvas.Children.Clear();
+            
+        }
+
+        private bool isWall(int x, int y)
+        {                            
+            foreach (Coords wall in walls)
             {
-                foreach (Coords wall in walls)
-                {
-                    if (wall.x == chosenDigits[0] && wall.y == chosenDigits[1])
-                        return false;
-                }
-                return true;
+                if (wall.x == x && wall.y == y)
+                    return true;
             }
-            return false;
+            return false;            
         }
         private void MainWindow_Closing(object sender, CancelEventArgs e)
         {
